@@ -5,6 +5,6 @@ outpkg: "{{ .PackageName }}mocks"
 filename: "{{ .InterfaceName | snakecase | lower }}_mock.go"
 disable-version-string: true
 packages:
-  github.com/viqueen/go-template/pkg/pet:
+  github.com/viqueen/git-extensions/pkg/pet:
     interfaces:
       Project:

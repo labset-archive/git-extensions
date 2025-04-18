@@ -1,4 +1,4 @@
-## go-template
+## git-extensions
 
 > TODO: description
 

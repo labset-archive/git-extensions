@@ -1,4 +1,4 @@
-module github.com/viqueen/go-template
+module github.com/viqueen/git-extensions
 
 go 1.23.2
 
