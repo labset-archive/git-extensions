@@ -38,6 +38,15 @@ func command() *cobra.Command {
 		},
 	}
 
+	currentCmd := &cobra.Command{
+		Use:   "current",
+		Short: "Get the current monorepo view",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return monorepo.Current()
+		},
+	}
+
 	listCmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all monorepo views",
@@ -49,6 +58,7 @@ func command() *cobra.Command {
 
 	rootCmd.AddCommand(applyCmd)
 	rootCmd.AddCommand(createCmd)
+	rootCmd.AddCommand(currentCmd)
 	rootCmd.AddCommand(listCmd)
 
 	return rootCmd
