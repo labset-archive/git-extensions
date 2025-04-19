@@ -8,11 +8,15 @@ formatters:
 
 linters:
   default: "all"
+  disable:
+    - exhaustruct
+    - revive
   settings:
     depguard:
       rules:
         main:
           allow:
             - $gostd
-            - github.com/viqueen/go-template
+            - github.com/viqueen/git-extensions
             - github.com/stretchr/testify
+            - github.com/spf13/cobra
