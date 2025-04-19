@@ -11,6 +11,7 @@ linters:
   disable:
     - exhaustruct
     - revive
+    - mnd
   settings:
     depguard:
       rules:
