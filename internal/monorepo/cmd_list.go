@@ -10,12 +10,12 @@ import (
 func List() error {
 	viewsDir, err := ensureViewsFolder()
 	if err != nil {
-		return fmt.Errorf("failed to ensure views folder: %w", err)
+		return fmt.Errorf("failed to ensure views folder: \n%w", err)
 	}
 
 	entries, err := os.ReadDir(viewsDir)
 	if err != nil {
-		return fmt.Errorf("failed to read directory %s: %w", viewsDir, err)
+		return fmt.Errorf("failed to read directory %s: \n%w", viewsDir, err)
 	}
 
 	for _, entry := range entries {

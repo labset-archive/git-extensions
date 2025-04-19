@@ -10,9 +10,9 @@ import (
 func Create(name string, includes ...string) error {
 	log.Printf("[git-monorepo] creating view %s", name)
 
-	viewFile, err := ensureViewFile(name)
+	viewFile, err := ensureViewFileCreated(name)
 	if err != nil {
-		return fmt.Errorf("failed to create view file: %w", err)
+		return fmt.Errorf("failed to create view file: \n%w", err)
 	}
 	defer func(viewFile *os.File) {
 		err = viewFile.Close()
@@ -30,7 +30,7 @@ func Create(name string, includes ...string) error {
 	encoder.SetIndent("", "  ")
 
 	if err = encoder.Encode(view); err != nil {
-		return fmt.Errorf("failed to encode view to JSON: %w", err)
+		return fmt.Errorf("failed to encode view to JSON: \n%w", err)
 	}
 
 	log.Printf("[git-monorepo] created view %s", viewFile.Name())
