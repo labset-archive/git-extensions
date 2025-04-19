@@ -30,7 +30,7 @@ func command() *cobra.Command {
 	}
 
 	createCmd := &cobra.Command{
-		Use:   "create",
+		Use:   "create <name> <paths...>",
 		Short: "Create a new monorepo view",
 		Args:  cobra.MinimumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
