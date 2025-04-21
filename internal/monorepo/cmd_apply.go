@@ -29,19 +29,18 @@ func Apply(name string) error {
 		return fmt.Errorf("failed to decode view file: \n%w", err)
 	}
 
-	if err = runCmd("git", "config", "--local", "monorepo.view", name); err != nil {
+	if err = gitCmd("config", "--local", "monorepo.view", name); err != nil {
 		return fmt.Errorf("failed to set git config: \n%w", err)
 	}
 
-	if err = runCmd("git", "sparse-checkout", "init", "--cone"); err != nil {
+	if err = gitCmd("sparse-checkout", "init", "--cone"); err != nil {
 		return fmt.Errorf("failed to init sparse-checkout: \n%w", err)
 	}
 
-	sparseCheckoutSetArgs := []string{"sparse-checkout", "set"}
+	sparseCheckoutSetArgs := []string{"set", ".monorepo"}
 	sparseCheckoutSetArgs = append(sparseCheckoutSetArgs, view.Includes...)
-	sparseCheckoutSetArgs = append(sparseCheckoutSetArgs, ".monorepo")
 
-	if err = runCmd("git", sparseCheckoutSetArgs...); err != nil {
+	if err = gitCmd("sparse-checkout", sparseCheckoutSetArgs...); err != nil {
 		return fmt.Errorf("failed to set sparse-checkout: \n%w", err)
 	}
 

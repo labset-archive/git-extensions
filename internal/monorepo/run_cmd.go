@@ -6,8 +6,10 @@ import (
 	"os/exec"
 )
 
-func runCmd(name string, args ...string) error {
-	cmd := exec.Command(name, args...)
+func gitCmd(name string, args ...string) error {
+	cmdArgs := []string{name}
+	cmdArgs = append(cmdArgs, args...)
+	cmd := exec.Command("git", cmdArgs...) //nolint:gosec
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
