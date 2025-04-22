@@ -7,13 +7,6 @@ import (
 )
 
 func main() {
-	cmd := command()
-	if err := cmd.Execute(); err != nil {
-		log.Fatalf("failed to execute command: %v", err)
-	}
-}
-
-func command() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use: "git-monorepo",
 	}
@@ -23,5 +16,7 @@ func command() *cobra.Command {
 	rootCmd.AddCommand(ListCmd())
 	rootCmd.AddCommand(SelectCmd())
 
-	return rootCmd
+	if err := rootCmd.Execute(); err != nil {
+		log.Fatalf("failed to execute command: %v", err)
+	}
 }
