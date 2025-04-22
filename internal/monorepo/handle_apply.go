@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/viqueen/git-extensions/pkg/git"
 )
 
-func Apply(name string) error {
-	viewFile, err := ensureViewFileExists(name)
+func Apply(repo *git.Repo, name string) error {
+	viewFile, err := ensureViewFileExists(repo, name)
 	if err != nil {
 		return fmt.Errorf("failed to ensure view file exists: \n%w", err)
 	}

@@ -3,8 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/viqueen/git-extensions/internal/monorepo"
-
 	"github.com/spf13/cobra"
 )
 
@@ -20,46 +18,9 @@ func command() *cobra.Command {
 		Use: "git-monorepo",
 	}
 
-	applyCmd := &cobra.Command{
-		Use:   "apply",
-		Short: "Apply a monorepo view",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return monorepo.Apply(args[0])
-		},
-	}
-
-	createCmd := &cobra.Command{
-		Use:   "create <name> <paths...>",
-		Short: "Create a new monorepo view",
-		Args:  cobra.MinimumNArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return monorepo.Create(args[0], args[1:]...)
-		},
-	}
-
-	currentCmd := &cobra.Command{
-		Use:   "current",
-		Short: "Get the current monorepo view",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return monorepo.Current()
-		},
-	}
-
-	listCmd := &cobra.Command{
-		Use:   "list",
-		Short: "List all monorepo views",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return monorepo.List()
-		},
-	}
-
-	rootCmd.AddCommand(applyCmd)
-	rootCmd.AddCommand(createCmd)
-	rootCmd.AddCommand(currentCmd)
-	rootCmd.AddCommand(listCmd)
+	rootCmd.AddCommand(ApplyCmd())
+	rootCmd.AddCommand(CreateCmd())
+	rootCmd.AddCommand(ListCmd())
 
 	return rootCmd
 }

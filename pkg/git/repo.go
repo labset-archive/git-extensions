@@ -7,7 +7,8 @@ import (
 )
 
 type Repo struct {
-	Executor ExecCommand
+	WorkingDirectory string
+	Executor         ExecCommand
 }
 
 type Loader interface {
@@ -43,5 +44,5 @@ func (l *loader) Load() (*Repo, error) {
 		return nil, fmt.Errorf("%s: %w", ErrorNotAGitRepository, err)
 	}
 
-	return &Repo{Executor: executor}, nil
+	return &Repo{WorkingDirectory: workingDirectory, Executor: executor}, nil
 }

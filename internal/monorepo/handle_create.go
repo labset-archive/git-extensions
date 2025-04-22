@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/viqueen/git-extensions/pkg/git"
 )
 
-func Create(name string, includes ...string) error {
+func Create(repo *git.Repo, name string, includes ...string) error {
 	log.Printf("[git-monorepo] creating view %s", name)
 
-	viewFile, err := ensureViewFileCreated(name)
+	viewFile, err := ensureViewFileCreated(repo, name)
 	if err != nil {
 		return fmt.Errorf("failed to create view file: \n%w", err)
 	}

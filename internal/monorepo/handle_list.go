@@ -5,10 +5,12 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/viqueen/git-extensions/pkg/git"
 )
 
-func List() error {
-	viewsDir, err := ensureViewsFolder()
+func List(repo *git.Repo) error {
+	viewsDir, err := ensureViewsFolder(repo)
 	if err != nil {
 		return fmt.Errorf("failed to ensure views folder: \n%w", err)
 	}
@@ -23,7 +25,7 @@ func List() error {
 			continue
 		}
 
-		viewName := strings.Trim(entry.Name(), ".json")
+		viewName := strings.TrimSuffix(entry.Name(), ".json")
 		log.Printf("[git-monorepo] - %s", viewName)
 	}
 

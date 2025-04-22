@@ -2,6 +2,7 @@ package monorepo
 
 import (
 	"fmt"
+	"github.com/viqueen/git-extensions/pkg/git"
 	"os"
 	"path"
 )
@@ -12,22 +13,17 @@ type View struct {
 	Includes    []string `json:"includes"`
 }
 
-func ensureViewsFolder() (string, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("failed to get working directory: \n%w", err)
-	}
-
-	viewsDir := path.Join(wd, ".monorepo", "views")
-	if err = os.MkdirAll(viewsDir, os.ModePerm); err != nil { //nolint:gosec
+func ensureViewsFolder(repo *git.Repo) (string, error) {
+	viewsDir := path.Join(repo.WorkingDirectory, ".monorepo", "views")
+	if err := os.MkdirAll(viewsDir, os.ModePerm); err != nil { //nolint:gosec
 		return "", fmt.Errorf("failed to create views directory: \n%w", err)
 	}
 
 	return viewsDir, nil
 }
 
-func ensureViewFileCreated(name string) (*os.File, error) {
-	viewsDir, err := ensureViewsFolder()
+func ensureViewFileCreated(repo *git.Repo, name string) (*os.File, error) {
+	viewsDir, err := ensureViewsFolder(repo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to ensure views folder: \n%w", err)
 	}
@@ -42,8 +38,8 @@ func ensureViewFileCreated(name string) (*os.File, error) {
 	return file, nil
 }
 
-func ensureViewFileExists(name string) (*os.File, error) {
-	viewsDir, err := ensureViewsFolder()
+func ensureViewFileExists(repo *git.Repo, name string) (*os.File, error) {
+	viewsDir, err := ensureViewsFolder(repo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to ensure views folder: \n%w", err)
 	}
