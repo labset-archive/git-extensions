@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 
 	"github.com/viqueen/git-extensions/pkg/git"
 )
 
-func Create(repo *git.Repo, name string, includes ...string) error {
-	log.Printf("[git-monorepo] creating view %s", name)
+func Set(repo *git.Repo, name string, includes ...string) error {
+	log.Printf("[git-monorepo] setting view %s", name)
 
 	viewFile, err := ensureViewFileCreated(repo, name)
 	if err != nil {
-		return fmt.Errorf("failed to create view file: \n%w", err)
+		return fmt.Errorf("failed to load view file: \n%w", err)
 	}
 	defer func(viewFile *os.File) {
 		err = viewFile.Close()
@@ -22,6 +23,8 @@ func Create(repo *git.Repo, name string, includes ...string) error {
 			log.Fatalf("[git-monorepo] failed to close view file: %v", err)
 		}
 	}(viewFile)
+
+	sort.Strings(includes)
 
 	view := View{
 		Name:     name,
@@ -34,8 +37,6 @@ func Create(repo *git.Repo, name string, includes ...string) error {
 	if err = encoder.Encode(view); err != nil {
 		return fmt.Errorf("failed to encode view to JSON: \n%w", err)
 	}
-
-	log.Printf("[git-monorepo] created view %s", viewFile.Name())
 
 	return nil
 }

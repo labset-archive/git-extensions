@@ -3,33 +3,14 @@ package monorepo
 import (
 	"fmt"
 	"log"
-	"os"
-	"strings"
 
 	"github.com/viqueen/git-extensions/pkg/git"
 )
 
 func List(repo *git.Repo) error {
-	viewsDir, err := ensureViewsFolder(repo)
+	views, err := listViews(repo)
 	if err != nil {
-		return fmt.Errorf("failed to ensure views folder: \n%w", err)
-	}
-
-	entries, err := os.ReadDir(viewsDir)
-	if err != nil {
-		return fmt.Errorf("failed to read directory %s: \n%w", viewsDir, err)
-	}
-
-	views := make([]string, 0, len(entries))
-	views = append(views, "default")
-
-	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
-			continue
-		}
-
-		viewName := strings.TrimSuffix(entry.Name(), ".json")
-		views = append(views, viewName)
+		return fmt.Errorf("failed to list views: \n%w", err)
 	}
 
 	// get current view

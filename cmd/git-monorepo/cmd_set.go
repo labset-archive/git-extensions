@@ -8,11 +8,11 @@ import (
 	"github.com/viqueen/git-extensions/pkg/git"
 )
 
-func CreateCmd() *cobra.Command {
+func SetCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "create <name>",
-		Short: "Create a new monorepo view",
-		Args:  cobra.ExactArgs(1),
+		Use:   "set <name> <paths...>",
+		Short: "Set a new monorepo view",
+		Args:  cobra.MinimumNArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			loader := git.NewLoader()
 			repo, err := loader.Load()
@@ -20,7 +20,7 @@ func CreateCmd() *cobra.Command {
 				return fmt.Errorf("failed to load git repository: \n%w", err)
 			}
 
-			return monorepo.Create(repo, args[0])
+			return monorepo.Set(repo, args[0], args[1:]...)
 		},
 	}
 }
