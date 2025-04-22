@@ -3,6 +3,7 @@ package git
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 type ExecCommand interface {
@@ -35,5 +36,7 @@ func (e *execCommand) Run(name string, args ...string) (string, error) {
 		return "", fmt.Errorf("%s: %w", ErrorFailedToRunCommand, err)
 	}
 
-	return string(output), nil
+	trimmed := strings.TrimSpace(string(output))
+
+	return trimmed, nil
 }

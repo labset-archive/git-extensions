@@ -2,9 +2,10 @@ package monorepo
 
 import (
 	"fmt"
-	"github.com/viqueen/git-extensions/pkg/git"
 	"os"
 	"path"
+
+	"github.com/viqueen/git-extensions/pkg/git"
 )
 
 type View struct {
