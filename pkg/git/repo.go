@@ -1,7 +1,6 @@
 package git
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"strings"
@@ -33,16 +32,14 @@ func (l *loader) Load() (*Repo, error) {
 		return nil, fmt.Errorf("%s: %w", ErrorFailedToGetWorkingDirectory, err)
 	}
 
-	var out bytes.Buffer
-
-	executor := NewExecCommand(workingDirectory, &out)
-	err = executor.Run("rev-parse", "--is-inside-work-tree")
+	executor := NewExecCommand(workingDirectory)
+	output, err := executor.Run("rev-parse", "--is-inside-work-tree")
 
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", ErrorNotAGitRepository, err)
 	}
 
-	if strings.TrimSpace(out.String()) != "true" {
+	if strings.TrimSpace(output) != "true" {
 		return nil, fmt.Errorf("%s: %w", ErrorNotAGitRepository, err)
 	}
 
