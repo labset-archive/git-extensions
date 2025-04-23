@@ -18,6 +18,32 @@ builds:
     dir: ./cmd/git-squashed-go
     binary: git-squashed-go
 
+archives:
+  - id: default
+    ids:
+      - git-monorepo
+      - git-recent-go
+      - git-squashed-go
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    formats: tar.gz
+    files:
+      - LICENSE
+      - README.md
+
+brews:
+  - name: git-extensions
+    repository:
+      owner: viqueen
+      name: homebrew-labset
+    install: |
+        bin.install "git-monorepo"
+        bin.install "git-recent-go"
+        bin.install "git-squashed-go"
+    commit_author:
+      name: viqueen
+      email: goreleaser-bot@github.com
+
+
 changelog:
   sort: asc
   filters:
