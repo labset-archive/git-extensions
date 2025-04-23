@@ -11,7 +11,7 @@ import (
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use: "git-recent",
+		Use: "git-recent-go",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			loader := git.NewLoader()
 			repo, err := loader.Load()

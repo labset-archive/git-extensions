@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/manifoldco/promptui"
+	"github.com/viqueen/git-extensions/pkg/prompt"
 
 	"github.com/viqueen/git-extensions/pkg/git"
 )
@@ -15,17 +15,17 @@ func Recent(repo *git.Repo) error {
 		return fmt.Errorf("failed to list branches: %w", err)
 	}
 
-	recentPrompt := promptui.Select{
-		Label: "select branch to checkout",
-		Items: branches,
+	recentPrompt := prompt.Select{
+		Message: "select branch to checkout",
+		Options: branches,
 	}
 
-	_, selectedBranch, err := recentPrompt.Run()
+	output, err := recentPrompt.Prompt()
 	if err != nil {
 		return fmt.Errorf("failed to select branch: %w", err)
 	}
 
-	parts := strings.Split(selectedBranch, " ")
+	parts := strings.Split(output.Selected, " ")
 	_, err = repo.Executor.Run("checkout", parts[1])
 
 	if err != nil {
