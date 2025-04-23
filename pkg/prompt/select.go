@@ -1,7 +1,6 @@
 package prompt
 
 import (
-	"errors"
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -27,22 +26,26 @@ type model struct {
 }
 
 func (s *Select) Prompt() (*SelectOutput, error) {
-	m := model{
+	initial := model{
 		message: s.Message,
 		options: s.Options,
 		cursor:  0,
 	}
 
-	p := tea.NewProgram(m)
+	p := tea.NewProgram(initial)
 
 	result, err := p.Run()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to run prompt: %w", err)
 	}
 
-	finalModel := result.(model)
+	finalModel, ok := result.(model)
+	if !ok {
+		return nil, ErrPromptEmpty
+	}
+
 	if finalModel.quitting {
-		return nil, errors.New("prompt cancelled")
+		return nil, ErrPromptCancelled
 	}
 
 	return &SelectOutput{
@@ -58,30 +61,32 @@ func (m model) Init() tea.Cmd {
 
 // Update handles user input.
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch key := msg.(type) {
-	case tea.KeyMsg:
-		switch key.String() {
-		case "ctrl+c", "q", "esc":
-			m.quitting = true
+	key, ok := msg.(tea.KeyMsg)
+	if !ok {
+		return m, nil
+	}
 
-			return m, tea.Quit
+	switch key.String() {
+	case "ctrl+c", "q", "esc":
+		m.quitting = true
 
-		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
-			}
+		return m, tea.Quit
 
-		case "down", "j":
-			if m.cursor < len(m.options)-1 {
-				m.cursor++
-			}
-
-		case "enter":
-			m.selected = m.cursor
-			m.done = true
-
-			return m, tea.Quit
+	case "up", "k":
+		if m.cursor > 0 {
+			m.cursor--
 		}
+
+	case "down", "j":
+		if m.cursor < len(m.options)-1 {
+			m.cursor++
+		}
+
+	case "enter":
+		m.selected = m.cursor
+		m.done = true
+
+		return m, tea.Quit
 	}
 
 	return m, nil
@@ -93,7 +98,7 @@ func (m model) View() string {
 		return ""
 	}
 
-	s := "\n" + m.message + "\n\n"
+	output := "\n" + m.message + "\n\n"
 
 	for i, opt := range m.options {
 		cursor := " " // no cursor
@@ -101,10 +106,10 @@ func (m model) View() string {
 			cursor = ">" // cursor!
 		}
 
-		s += fmt.Sprintf("%s %s\n", cursor, opt)
+		output += fmt.Sprintf("%s %s\n", cursor, opt)
 	}
 
-	s += "\n(↑/↓ to move, Enter to select, q to quit)"
+	output += "\n(↑/↓ to move, Enter to select, q to quit)"
 
-	return s
+	return output
 }

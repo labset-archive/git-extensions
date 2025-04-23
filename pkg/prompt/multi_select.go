@@ -1,7 +1,6 @@
 package prompt
 
 import (
-	"errors"
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -38,22 +37,26 @@ func (m *MultiSelect) Prompt() (*MultiSelectOutput, error) {
 
 	result, err := program.Run()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to run prompt: %w", err)
 	}
 
-	finalModel := result.(multiModel)
+	finalModel, ok := result.(multiModel)
+	if !ok {
+		return nil, ErrPromptEmpty
+	}
+
 	if finalModel.quitting {
-		return nil, errors.New("prompt cancelled")
+		return nil, ErrPromptCancelled
 	}
 
 	var selected []string
 
 	var indices []int
 
-	for i, ok := range finalModel.selected {
-		if ok {
-			selected = append(selected, finalModel.options[i])
-			indices = append(indices, i)
+	for index, found := range finalModel.selected {
+		if found {
+			selected = append(selected, finalModel.options[index])
+			indices = append(indices, index)
 		}
 	}
 
@@ -68,29 +71,31 @@ func (m multiModel) Init() tea.Cmd {
 }
 
 func (m multiModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch key := msg.(type) {
-	case tea.KeyMsg:
-		switch key.String() {
-		case "ctrl+c", "q", "esc":
-			m.quitting = true
+	key, ok := msg.(tea.KeyMsg)
+	if !ok {
+		return m, nil
+	}
 
-			return m, tea.Quit
+	switch key.String() {
+	case "ctrl+c", "q", "esc":
+		m.quitting = true
 
-		case "up", "k":
-			if m.cursor > 0 {
-				m.cursor--
-			}
-		case "down", "j":
-			if m.cursor < len(m.options)-1 {
-				m.cursor++
-			}
-		case " ":
-			m.selected[m.cursor] = !m.selected[m.cursor]
-		case "enter":
-			m.done = true
+		return m, tea.Quit
 
-			return m, tea.Quit
+	case "up", "k":
+		if m.cursor > 0 {
+			m.cursor--
 		}
+	case "down", "j":
+		if m.cursor < len(m.options)-1 {
+			m.cursor++
+		}
+	case " ":
+		m.selected[m.cursor] = !m.selected[m.cursor]
+	case "enter":
+		m.done = true
+
+		return m, tea.Quit
 	}
 
 	return m, nil
@@ -101,23 +106,23 @@ func (m multiModel) View() string {
 		return ""
 	}
 
-	s := "\n" + m.message + "\n\n"
+	output := "\n" + m.message + "\n\n"
 
-	for i, opt := range m.options {
+	for index, opt := range m.options {
 		cursor := " " // no cursor
-		if m.cursor == i {
+		if m.cursor == index {
 			cursor = ">" // current line
 		}
 
 		checked := " " // not selected
-		if m.selected[i] {
+		if m.selected[index] {
 			checked = "x"
 		}
 
-		s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, opt)
+		output += fmt.Sprintf("%s [%s] %s\n", cursor, checked, opt)
 	}
 
-	s += "\n(↑/↓ to move, Space to select, Enter to confirm, q to quit)"
+	output += "\n(↑/↓ to move, Space to select, Enter to confirm, q to quit)"
 
-	return s
+	return output
 }

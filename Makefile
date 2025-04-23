@@ -1,12 +1,4 @@
-.PHONY: mocks lint build
-
-.PHONY: mocks
-mocks:
-	docker run --rm \
-		--volume "${PWD}":/go/src \
-		--workdir /go/src \
-		vektra/mockery:v2.46 \
-		--all
+.PHONY: lint build
 
 .PHONY: lint
 lint:
@@ -30,5 +22,5 @@ build:
 		--volume "${PWD}":/go/src \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--workdir /go/src \
-		goreleaser/goreleaser:v2.4.4 \
-		build --clean --snapshot
+		ghcr.io/viqueen/docker-images-golang:main \
+		goreleaser build --clean --snapshot
