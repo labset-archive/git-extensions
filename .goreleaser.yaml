@@ -8,7 +8,15 @@ before:
     - go test ./...
 
 builds:
-  - skip: true
+  - id: git-monorepo
+    dir: ./cmd/git-monorepo
+    binary: git-monorepo
+  - id: git-recent-go
+    dir: ./cmd/git-recent-go
+    binary: git-recent-go
+  - id: git-squashed-go
+    dir: ./cmd/git-squashed-go
+    binary: git-squashed-go
 
 changelog:
   sort: asc
