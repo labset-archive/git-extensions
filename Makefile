@@ -24,3 +24,13 @@ build:
 		--workdir /go/src \
 		ghcr.io/viqueen/docker-images-golang:main \
 		goreleaser build --clean --snapshot
+
+
+.PHONY: release
+release:
+	docker run -it --rm \
+		--volume "${PWD}":/go/src \
+		--volume /var/run/docker.sock:/var/run/docker.sock \
+		--workdir /go/src \
+		ghcr.io/viqueen/docker-images-golang:main \
+		goreleaser release --clean
