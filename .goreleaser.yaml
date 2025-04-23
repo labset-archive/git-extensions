@@ -11,12 +11,18 @@ builds:
   - id: git-monorepo
     dir: ./cmd/git-monorepo
     binary: git-monorepo
+    flags:
+      - -buildvcs=false
   - id: git-recent-go
     dir: ./cmd/git-recent-go
     binary: git-recent-go
+    flags:
+      - -buildvcs=false
   - id: git-squashed-go
     dir: ./cmd/git-squashed-go
     binary: git-squashed-go
+    flags:
+      - -buildvcs=false
 
 archives:
   - id: default
