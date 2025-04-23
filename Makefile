@@ -2,7 +2,7 @@
 
 .PHONY: lint
 lint:
-	docker run --rm \
+	docker run -it --rm \
 		--volume "${PWD}":/go/src \
 		--workdir /go/src \
 		golangci/golangci-lint:v2.1.2 \
@@ -10,7 +10,7 @@ lint:
 
 .PHONY: lint-fix
 lint-fix:
-	docker run --rm \
+	docker run -it --rm \
     		--volume "${PWD}":/go/src \
     		--workdir /go/src \
     		golangci/golangci-lint:v2.1.2 \
@@ -18,7 +18,7 @@ lint-fix:
 
 .PHONY: build
 build:
-	docker run --rm \
+	docker run -it --rm \
 		--volume "${PWD}":/go/src \
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		--workdir /go/src \
