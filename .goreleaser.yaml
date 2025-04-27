@@ -8,6 +8,11 @@ before:
     - go test ./...
 
 builds:
+  - id: git-merged-go
+    dir: ./cmd/git-merged-go
+    binary: git-merged-go
+    flags:
+      - -buildvcs=false
   - id: git-monorepo
     dir: ./cmd/git-monorepo
     binary: git-monorepo
