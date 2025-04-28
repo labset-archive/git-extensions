@@ -24,3 +24,4 @@ linters:
             - github.com/spf13/cobra
             - github.com/manifoldco/promptui
             - github.com/charmbracelet/bubbletea
+            - github.com/dgraph-io/badger/v4
