@@ -6,6 +6,8 @@ import (
 
 	"github.com/viqueen/git-extensions/pkg/prompt"
 
+	"github.com/charmbracelet/huh"
+
 	"github.com/viqueen/git-extensions/pkg/git"
 )
 
@@ -15,17 +17,23 @@ func Recent(repo *git.Repo) error {
 		return fmt.Errorf("failed to list branches: %w", err)
 	}
 
-	recentPrompt := prompt.Select{
-		Message: "select branch to checkout",
-		Options: branches,
-	}
+	var selectedBranch string
 
-	output, err := recentPrompt.Prompt()
+	recentForm := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Title("Select a branch to checkout").
+				Options(prompt.AsOptions(branches)...).
+				Value(&selectedBranch),
+		),
+	)
+
+	err = recentForm.Run()
 	if err != nil {
-		return fmt.Errorf("failed to select branch: %w", err)
+		return fmt.Errorf("failed to run form: %w", err)
 	}
 
-	parts := strings.Split(output.Selected, " ")
+	parts := strings.Split(selectedBranch, " ")
 	_, err = repo.Executor.Run("checkout", parts[1])
 
 	if err != nil {

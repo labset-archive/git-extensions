@@ -3,7 +3,9 @@ package monorepo
 import (
 	"fmt"
 
-	"github.com/manifoldco/promptui"
+	"github.com/charmbracelet/huh"
+	"github.com/viqueen/git-extensions/pkg/prompt"
+
 	"github.com/viqueen/git-extensions/pkg/git"
 )
 
@@ -13,14 +15,24 @@ func Select(repo *git.Repo) error {
 		return fmt.Errorf("failed to list views: \n%w", err)
 	}
 
-	viewPrompt := promptui.Select{
-		Label: "select view",
-		Items: views,
+	if len(views) == 0 {
+		return nil
 	}
 
-	_, selectedView, err := viewPrompt.Run()
+	var selectedView string
+
+	selectForm := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Title("Select view").
+				Options(prompt.AsOptions(views)...).
+				Value(&selectedView),
+		),
+	)
+
+	err = selectForm.Run()
 	if err != nil {
-		return fmt.Errorf("failed to select view: \n%w", err)
+		return fmt.Errorf("failed to run form: %w", err)
 	}
 
 	return Apply(repo, selectedView)

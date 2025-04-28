@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/viqueen/git-extensions/pkg/git"
 	"github.com/viqueen/git-extensions/pkg/prompt"
+
+	"github.com/charmbracelet/huh"
+
+	"github.com/viqueen/git-extensions/pkg/git"
 )
 
 func Merged(repo *git.Repo, target string) error {
@@ -18,17 +21,22 @@ func Merged(repo *git.Repo, target string) error {
 		return nil
 	}
 
-	mergedPrompt := prompt.MultiSelect{
-		Message: "select branch to delete",
-		Options: branches,
-	}
+	var selectedBranches []string
 
-	output, err := mergedPrompt.Prompt()
+	mergedForm := huh.NewForm(
+		huh.NewGroup(
+			huh.NewMultiSelect[string]().
+				Title("Select branches to delete").
+				Options(prompt.AsOptions(branches)...).
+				Value(&selectedBranches)),
+	)
+
+	err = mergedForm.Run()
 	if err != nil {
-		return fmt.Errorf("failed to select branches: %w", err)
+		return fmt.Errorf("failed to run form: %w", err)
 	}
 
-	for _, selected := range output.Selected {
+	for _, selected := range selectedBranches {
 		_, err = repo.Executor.Run("branch", "-d", selected)
 		if err != nil {
 			log.Printf("failed to delete branch: %s, error: %v", selected, err)
