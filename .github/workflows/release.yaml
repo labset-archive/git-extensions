@@ -6,11 +6,15 @@ on:
 jobs:
   release:
     runs-on: ubuntu-22.04
-
     steps:
       - uses: actions/checkout@v4
-      - run: make release
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.23
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: 2.4.4
+          args: release --clean
         env:
-          CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

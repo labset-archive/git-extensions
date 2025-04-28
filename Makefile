@@ -23,12 +23,3 @@ build:
 		--volume /var/run/docker.sock:/var/run/docker.sock \
 		ghcr.io/viqueen/docker-images-golang:main \
 		goreleaser build --clean --snapshot
-
-
-.PHONY: release
-release:
-	docker run $(DOCKER_FLAGS) \
-		-e GITHUB_TOKEN=${GITHUB_TOKEN} \
-		--volume /var/run/docker.sock:/var/run/docker.sock \
-		ghcr.io/viqueen/docker-images-golang:main \
-		goreleaser release --clean
