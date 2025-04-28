@@ -28,25 +28,32 @@ func NewConfigHandler(wd string) ConfigHandler {
 	}
 }
 
+const (
+	gitConfigDir            = "workspace.dir"
+	gitConfigDefault        = "workspace.default"
+	gitConfigGithubUsername = "workspace.github.username"
+	gitConfigGithubToken    = "workspace.github.token"
+)
+
 func (c *configHandler) Load() (*Config, error) {
-	workspacesDir, err := c.execCommand.Run("config", "--global", "workspaces.dir")
+	workspacesDir, err := c.execCommand.Run("config", "--global", gitConfigDir)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get workspaces.dir: %w", err)
+		return nil, fmt.Errorf("failed to get %s: %w", gitConfigDir, err)
 	}
 
-	workspacesDefault, err := c.execCommand.Run("config", "--global", "workspaces.default")
+	workspacesDefault, err := c.execCommand.Run("config", "--global", gitConfigDefault)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get workspaces.default: %w", err)
+		return nil, fmt.Errorf("failed to get %s: %w", gitConfigDefault, err)
 	}
 
-	githubUsername, err := c.execCommand.Run("config", "--global", "workspaces.github.username")
+	githubUsername, err := c.execCommand.Run("config", "--global", gitConfigGithubUsername)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get workspaces.github.username: %w", err)
+		return nil, fmt.Errorf("failed to get %s: %w", gitConfigGithubUsername, err)
 	}
 
-	githubToken, err := c.execCommand.Run("config", "--global", "workspaces.github.token")
+	githubToken, err := c.execCommand.Run("config", "--global", gitConfigGithubToken)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get workspaces.github.token: %w", err)
+		return nil, fmt.Errorf("failed to get %s: %w", gitConfigGithubToken, err)
 	}
 
 	return &Config{
@@ -58,29 +65,29 @@ func (c *configHandler) Load() (*Config, error) {
 }
 
 func (c *configHandler) Save(config *Config) error {
-	_, err := c.execCommand.Run("config", "--global", "workspaces.dir", config.Dir)
+	_, err := c.execCommand.Run("config", "--global", gitConfigDir, config.Dir)
 	if err != nil {
-		return fmt.Errorf("failed to set workspaces.dir: %w", err)
+		return fmt.Errorf("failed to set %s: %w", gitConfigDir, err)
 	}
 
-	_, err = c.execCommand.Run("config", "--global", "workspaces.default", config.Default)
+	_, err = c.execCommand.Run("config", "--global", gitConfigDefault, config.Default)
 	if err != nil {
-		return fmt.Errorf("failed to set workspaces.default: %w", err)
+		return fmt.Errorf("failed to set %s: %w", gitConfigDefault, err)
 	}
 
 	_, err = c.execCommand.Run(
 		"config",
 		"--global",
-		"workspaces.github.username",
+		gitConfigGithubUsername,
 		config.GithubUsername,
 	)
 	if err != nil {
-		return fmt.Errorf("failed to set workspaces.github.username: %w", err)
+		return fmt.Errorf("failed to set %s: %w", gitConfigGithubUsername, err)
 	}
 
-	_, err = c.execCommand.Run("config", "--global", "workspaces.github.token", config.GithubToken)
+	_, err = c.execCommand.Run("config", "--global", gitConfigGithubToken, config.GithubToken)
 	if err != nil {
-		return fmt.Errorf("failed to set workspaces.github.token: %w", err)
+		return fmt.Errorf("failed to set %s: %w", gitConfigGithubToken, err)
 	}
 
 	return nil
