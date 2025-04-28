@@ -28,6 +28,11 @@ builds:
     binary: git-squashed-go
     flags:
       - -buildvcs=false
+  - id: git-workspace
+    dir: ./cmd/git-workspace
+    binary: git-workspace
+    flags:
+      - -buildvcs=false
 
 archives:
   - id: default
