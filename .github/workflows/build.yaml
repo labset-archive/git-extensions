@@ -29,5 +29,5 @@ jobs:
       - uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
-          version: 2.8.1
+          version: 2.8.2
           args: build --clean --snapshot

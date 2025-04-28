@@ -8,7 +8,7 @@ import (
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use: "git-workspace",
+		Use: "git-workspace-go",
 	}
 
 	rootCmd.AddCommand(InitCmd())
