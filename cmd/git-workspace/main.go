@@ -11,6 +11,8 @@ func main() {
 		Use: "git-workspace",
 	}
 
+	rootCmd.AddCommand(InitCmd())
+
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatalf("failed to execute command: %v", err)
 	}
