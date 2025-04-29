@@ -16,7 +16,7 @@ func List(repo *git.Repo) error {
 	// get current view
 	// ignore error as it is not critical
 	// see document for git config https://git-scm.com/docs/git-config
-	currentView, _ := repo.Executor.Run("config", "get", "--local", "monorepo.view")
+	currentView, _ := repo.Executor.Git("config", "get", "--local", "monorepo.view")
 
 	if currentView == "" {
 		currentView = "default"

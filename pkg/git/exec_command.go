@@ -7,7 +7,7 @@ import (
 )
 
 type ExecCommand interface {
-	Run(name string, args ...string) (string, error)
+	Git(name string, args ...string) (string, error)
 }
 
 type execCommand struct {
@@ -25,7 +25,7 @@ const (
 	ErrorFailedToRunCommand = "failed to run command"
 )
 
-func (e *execCommand) Run(name string, args ...string) (string, error) {
+func (e *execCommand) Git(name string, args ...string) (string, error) {
 	cmdArgs := []string{name}
 	cmdArgs = append(cmdArgs, args...)
 	cmd := exec.Command("git", cmdArgs...) //nolint:gosec

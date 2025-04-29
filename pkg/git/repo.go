@@ -34,7 +34,7 @@ func (l *loader) Load() (*Repo, error) {
 	}
 
 	executor := NewExecCommand(workingDirectory)
-	output, err := executor.Run("rev-parse", "--is-inside-work-tree")
+	output, err := executor.Git("rev-parse", "--is-inside-work-tree")
 
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", ErrorNotAGitRepository, err)

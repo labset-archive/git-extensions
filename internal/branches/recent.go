@@ -34,7 +34,7 @@ func Recent(repo *git.Repo) error {
 	}
 
 	parts := strings.Split(selectedBranch, " ")
-	_, err = repo.Executor.Run("checkout", parts[1])
+	_, err = repo.Executor.Git("checkout", parts[1])
 
 	if err != nil {
 		return fmt.Errorf("failed to checkout branch: %w", err)

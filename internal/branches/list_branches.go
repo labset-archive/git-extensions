@@ -8,7 +8,7 @@ import (
 )
 
 func listRecentBranches(repo *git.Repo) ([]string, error) {
-	output, err := repo.Executor.Run(
+	output, err := repo.Executor.Git(
 		"for-each-ref",
 		"refs/heads/",
 		"--sort=committerdate",
@@ -30,7 +30,7 @@ func listRecentBranches(repo *git.Repo) ([]string, error) {
 }
 
 func listSquashedBranches(repo *git.Repo, target string) ([]string, error) {
-	output, err := repo.Executor.Run(
+	output, err := repo.Executor.Git(
 		"branch",
 		"--no-contains",
 		target,
@@ -51,7 +51,7 @@ func listSquashedBranches(repo *git.Repo, target string) ([]string, error) {
 }
 
 func listMergedBranches(repo *git.Repo, target string) ([]string, error) {
-	output, err := repo.Executor.Run(
+	output, err := repo.Executor.Git(
 		"branch",
 		"--merged",
 		target,

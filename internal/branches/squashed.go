@@ -43,7 +43,7 @@ func Squashed(repo *git.Repo, target string, forceDelete bool) error {
 	}
 
 	for _, selected := range selectedBranches {
-		_, err = repo.Executor.Run("branch", deleteFlag, selected)
+		_, err = repo.Executor.Git("branch", deleteFlag, selected)
 		if err != nil {
 			log.Printf("failed to delete branch: %s, error: %v", selected, err)
 		} else {

@@ -37,7 +37,7 @@ func Merged(repo *git.Repo, target string) error {
 	}
 
 	for _, selected := range selectedBranches {
-		_, err = repo.Executor.Run("branch", "-d", selected)
+		_, err = repo.Executor.Git("branch", "-d", selected)
 		if err != nil {
 			log.Printf("failed to delete branch: %s, error: %v", selected, err)
 		} else {

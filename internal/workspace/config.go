@@ -36,22 +36,22 @@ const (
 )
 
 func (c *configHandler) Load() (*Config, error) {
-	workspacesDir, err := c.execCommand.Run("config", "--global", gitConfigDir)
+	workspacesDir, err := c.execCommand.Git("config", "--global", gitConfigDir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get %s: %w", gitConfigDir, err)
 	}
 
-	workspacesDefault, err := c.execCommand.Run("config", "--global", gitConfigDefault)
+	workspacesDefault, err := c.execCommand.Git("config", "--global", gitConfigDefault)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get %s: %w", gitConfigDefault, err)
 	}
 
-	githubUsername, err := c.execCommand.Run("config", "--global", gitConfigGithubUsername)
+	githubUsername, err := c.execCommand.Git("config", "--global", gitConfigGithubUsername)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get %s: %w", gitConfigGithubUsername, err)
 	}
 
-	githubToken, err := c.execCommand.Run("config", "--global", gitConfigGithubToken)
+	githubToken, err := c.execCommand.Git("config", "--global", gitConfigGithubToken)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get %s: %w", gitConfigGithubToken, err)
 	}
@@ -65,17 +65,17 @@ func (c *configHandler) Load() (*Config, error) {
 }
 
 func (c *configHandler) Save(config *Config) error {
-	_, err := c.execCommand.Run("config", "--global", gitConfigDir, config.Dir)
+	_, err := c.execCommand.Git("config", "--global", gitConfigDir, config.Dir)
 	if err != nil {
 		return fmt.Errorf("failed to set %s: %w", gitConfigDir, err)
 	}
 
-	_, err = c.execCommand.Run("config", "--global", gitConfigDefault, config.Default)
+	_, err = c.execCommand.Git("config", "--global", gitConfigDefault, config.Default)
 	if err != nil {
 		return fmt.Errorf("failed to set %s: %w", gitConfigDefault, err)
 	}
 
-	_, err = c.execCommand.Run(
+	_, err = c.execCommand.Git(
 		"config",
 		"--global",
 		gitConfigGithubUsername,
@@ -85,7 +85,7 @@ func (c *configHandler) Save(config *Config) error {
 		return fmt.Errorf("failed to set %s: %w", gitConfigGithubUsername, err)
 	}
 
-	_, err = c.execCommand.Run("config", "--global", gitConfigGithubToken, config.GithubToken)
+	_, err = c.execCommand.Git("config", "--global", gitConfigGithubToken, config.GithubToken)
 	if err != nil {
 		return fmt.Errorf("failed to set %s: %w", gitConfigGithubToken, err)
 	}
