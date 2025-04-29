@@ -2,6 +2,7 @@ package workspace
 
 import (
 	"fmt"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/viqueen/git-extensions/pkg/prompt"
 )
@@ -18,6 +19,7 @@ func List(ws Workspace, filer RepoFilter) error {
 	}
 
 	program := tea.NewProgram(tbl)
+
 	_, err = program.Run()
 	if err != nil {
 		return fmt.Errorf("failed to run program: %w", err)

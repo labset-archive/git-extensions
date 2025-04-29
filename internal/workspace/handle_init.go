@@ -28,21 +28,17 @@ func Init() error {
 	configForm := huh.NewForm(
 		huh.NewGroup(
 			huh.NewInput().
-				Title("Workspaces Directory").
-				Placeholder("Enter the workspaces directory").
+				Title("Workspaces Directory").Placeholder("Enter the workspaces directory").
 				Value(&workspacesDir),
 			huh.NewInput().
 				Title("Default Workspace").
-				Placeholder("Enter the default workspace").
-				Value(&workspacesDefault),
+				Placeholder("Enter the default workspace").Value(&workspacesDefault),
 			huh.NewInput().
-				Title("GitHub Username").
-				Placeholder("Enter your GitHub username").
+				Title("GitHub Username").Placeholder("Enter your GitHub username").
 				Value(&githubUsername),
 			huh.NewInput().
 				Title("GitHub Token").
-				Placeholder("Enter your GitHub token").
-				EchoMode(huh.EchoModePassword).
+				Placeholder("Enter your GitHub token").EchoMode(huh.EchoModePassword).
 				Value(&githubToken),
 		),
 	)
@@ -79,7 +75,9 @@ func safeDir(dir string) (string, error) {
 		if err != nil {
 			return "", fmt.Errorf("failed to get home directory: %w", err)
 		}
+
 		return filepath.Join(homeDir, strings.TrimPrefix(dir, "~/")), nil
 	}
+
 	return dir, nil
 }

@@ -29,6 +29,7 @@ func withRegistry(handler WithRegistry) error {
 		workspaceDir := config.Dir
 
 		registryDir := filepath.Join(workspaceDir, ".git-workspace")
+
 		repos, err := registry.NewBadgerRegistry[workspace.Repo](registryDir)
 		if err != nil {
 			return fmt.Errorf("failed to create registry: %w", err)

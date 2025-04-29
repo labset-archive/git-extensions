@@ -12,6 +12,7 @@ func ListCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return withWorkspace(func(config *workspace.Config, ws workspace.Workspace) error {
 				filter := optionsToRepoFilter(cmd, config)
+
 				return workspace.List(ws, filter)
 			})
 		},
