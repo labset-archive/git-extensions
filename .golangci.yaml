@@ -22,5 +22,8 @@ linters:
             - github.com/viqueen/git-extensions
             - github.com/stretchr/testify
             - github.com/spf13/cobra
+            - github.com/charmbracelet/bubbletea
+            - github.com/charmbracelet/bubbles
             - github.com/charmbracelet/huh
+            - github.com/charmbracelet/lipgloss
             - github.com/dgraph-io/badger/v4
