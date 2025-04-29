@@ -22,7 +22,7 @@ const (
 
 // NewBadgerRegistry creates a new Badger registry instance.
 func NewBadgerRegistry[T any](path string) (Registry[T], error) {
-	opts := badger.DefaultOptions(path)
+	opts := badger.DefaultOptions(path).WithLoggingLevel(badger.ERROR)
 
 	db, err := badger.Open(opts)
 	if err != nil {

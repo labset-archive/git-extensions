@@ -3,6 +3,8 @@ package workspace
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 )
@@ -50,6 +52,11 @@ func Init() error {
 		return fmt.Errorf("failed to run config form: %w", err)
 	}
 
+	workspacesDir, err = safeDir(workspacesDir)
+	if err != nil {
+		return fmt.Errorf("failed to resolve workspaces directory: %w", err)
+	}
+
 	config := &Config{
 		Dir:            workspacesDir,
 		Default:        workspacesDefault,
@@ -64,4 +71,15 @@ func Init() error {
 	}
 
 	return nil
+}
+
+func safeDir(dir string) (string, error) {
+	if strings.HasPrefix(dir, "~/") || dir == "~" {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return "", fmt.Errorf("failed to get home directory: %w", err)
+		}
+		return filepath.Join(homeDir, strings.TrimPrefix(dir, "~/")), nil
+	}
+	return dir, nil
 }

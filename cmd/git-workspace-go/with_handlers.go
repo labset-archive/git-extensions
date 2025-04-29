@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/viqueen/git-extensions/internal/workspace"
 	"github.com/viqueen/git-extensions/pkg/git"
@@ -27,7 +28,8 @@ func withRegistry(handler WithRegistry) error {
 	return withConfig(func(config *workspace.Config) error {
 		workspaceDir := config.Dir
 
-		repos, err := registry.NewBadgerRegistry[workspace.Repo](workspaceDir)
+		registryDir := filepath.Join(workspaceDir, ".git-workspace")
+		repos, err := registry.NewBadgerRegistry[workspace.Repo](registryDir)
 		if err != nil {
 			return fmt.Errorf("failed to create registry: %w", err)
 		}
