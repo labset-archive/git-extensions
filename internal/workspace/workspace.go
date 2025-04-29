@@ -1,24 +1,9 @@
 package workspace
 
 import (
-	"fmt"
-
 	"github.com/viqueen/git-extensions/pkg/git"
 	"github.com/viqueen/git-extensions/pkg/registry"
 )
-
-type Repo struct {
-	UrlConnection string
-	Workspace     string
-	Owner         string
-	Name          string
-}
-
-func (r *Repo) Id() string {
-	return fmt.Sprintf("%s/%s/%s", r.Workspace, r.Owner, r.Name)
-}
-
-type RepoFilter func(repo Repo) bool
 
 type Workspace interface {
 	Add(repo Repo) error
