@@ -21,7 +21,7 @@ func withConfig(handler WithConfig) error {
 	return handler(config)
 }
 
-type WithRegistry func(registry registry.Registry[workspace.Repo]) error
+type WithRegistry func(config *workspace.Config, registry registry.Registry[workspace.Repo]) error
 
 func withRegistry(handler WithRegistry) error {
 	return withConfig(func(config *workspace.Config) error {
@@ -32,17 +32,19 @@ func withRegistry(handler WithRegistry) error {
 			return fmt.Errorf("failed to create registry: %w", err)
 		}
 
-		return handler(repos)
+		return handler(config, repos)
 	})
 }
 
-type WithWorkspace func(workspace workspace.Workspace) error
+type WithWorkspace func(config *workspace.Config, workspace workspace.Workspace) error
 
 func withWorkspace(handler WithWorkspace) error {
-	return withRegistry(func(repos registry.Registry[workspace.Repo]) error {
-		execCommand := git.NewExecCommand("")
-		ws := workspace.NewWorkspace(repos, execCommand)
+	return withRegistry(
+		func(config *workspace.Config, repos registry.Registry[workspace.Repo]) error {
+			execCommand := git.NewExecCommand("")
+			ws := workspace.NewWorkspace(repos, execCommand)
 
-		return handler(ws)
-	})
+			return handler(config, ws)
+		},
+	)
 }

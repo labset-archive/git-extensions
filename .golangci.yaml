@@ -13,6 +13,7 @@ linters:
     - ireturn
     - revive
     - mnd
+    - varnamelen
   settings:
     depguard:
       rules:
