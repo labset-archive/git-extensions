@@ -12,7 +12,9 @@ import (
 )
 
 type TableComponent[T any] struct {
-	table table.Model
+	table    table.Model
+	items    []T
+	onSelect func(item T)
 }
 
 var (
@@ -61,7 +63,10 @@ func NewTableComponent[T any](items []T) (*TableComponent[T], error) {
 	)
 	tbl.SetStyles(defaultTableStyles())
 
-	return &TableComponent[T]{table: tbl}, nil
+	return &TableComponent[T]{
+		table: tbl,
+		items: items,
+	}, nil
 }
 
 func (c *TableComponent[T]) Init() tea.Cmd {
@@ -74,6 +79,13 @@ func (c *TableComponent[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if key.String() == "ctrl+c" || key.String() == "ctrl+d" {
 			return c, tea.Quit
 		}
+
+		if key.String() == "enter" && c.onSelect != nil {
+			selectedIndex := c.table.Cursor()
+			if selectedIndex >= 0 && selectedIndex < len(c.items) {
+				c.onSelect(c.items[selectedIndex])
+			}
+		}
 	}
 
 	var cmd tea.Cmd
@@ -84,6 +96,10 @@ func (c *TableComponent[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (c *TableComponent[T]) View() string {
 	return c.table.View()
+}
+
+func (c *TableComponent[T]) OnSelect(onSelect func(item T)) {
+	c.onSelect = onSelect
 }
 
 func defaultTableStyles() table.Styles {
