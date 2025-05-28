@@ -13,12 +13,18 @@ type Workspace interface {
 }
 
 type workspace struct {
+	config      *Config
 	repos       registry.Registry[Repo]
 	execCommand git.ExecCommand
 }
 
-func NewWorkspace(repos registry.Registry[Repo], execCommand git.ExecCommand) Workspace {
+func NewWorkspace(
+	config *Config,
+	repos registry.Registry[Repo],
+	execCommand git.ExecCommand,
+) Workspace {
 	return &workspace{
+		config:      config,
 		repos:       repos,
 		execCommand: execCommand,
 	}

@@ -45,7 +45,7 @@ func withWorkspace(handler WithWorkspace) error {
 	return withRegistry(
 		func(config *workspace.Config, repos registry.Registry[workspace.Repo]) error {
 			execCommand := git.NewExecCommand("")
-			ws := workspace.NewWorkspace(repos, execCommand)
+			ws := workspace.NewWorkspace(config, repos, execCommand)
 
 			return handler(config, ws)
 		},

@@ -14,6 +14,7 @@ func main() {
 	rootCmd.AddCommand(InitCmd())
 	rootCmd.AddCommand(AddCmd())
 	rootCmd.AddCommand(ListCmd())
+	rootCmd.AddCommand(CloneCmd())
 
 	rootCmd.PersistentFlags().StringP("workspace", "w", "", "target workspace")
 	rootCmd.PersistentFlags().StringP("owner", "o", "", "target owner")
