@@ -18,6 +18,16 @@ func (r *Repo) Id() string {
 	return fmt.Sprintf("%s/%s/%s", r.Workspace, r.Owner, r.Name)
 }
 
+type DisplayRepo struct {
+	Workspace string
+	Owner     string
+	Name      string
+}
+
+func (r *DisplayRepo) Id() string {
+	return fmt.Sprintf("%s/%s/%s", r.Workspace, r.Owner, r.Name)
+}
+
 type RepoFilter func(repo Repo) bool
 
 var (

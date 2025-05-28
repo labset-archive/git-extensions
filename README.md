@@ -1,6 +1,6 @@
 ## git-extensions
 
-> TODO: description
+Collection of git extensions to enhance any local development setup.
 
 ---
 

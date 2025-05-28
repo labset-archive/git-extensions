@@ -38,7 +38,7 @@ func NewTableComponent[T any](items []T) (*TableComponent[T], error) {
 		field := elementType.Field(index)
 		columns[index] = table.Column{
 			Title: field.Name,
-			Width: 20,
+			Width: 30,
 		}
 	}
 
