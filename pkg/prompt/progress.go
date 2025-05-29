@@ -1,8 +1,8 @@
 package prompt
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/charmbracelet/bubbles/progress"
@@ -10,8 +10,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-// ProgressModel is a generic progress model for displaying progress of operations.
-type ProgressModel[T any] struct {
+// ProgressComponent is a generic progress model for displaying progress of operations.
+type ProgressComponent[T any] struct {
 	items       []T
 	progress    progress.Model
 	currentItem int
@@ -21,19 +21,19 @@ type ProgressModel[T any] struct {
 	itemLabel   func(item T) string
 }
 
-// NewProgressModel creates a new progress model.
-func NewProgressModel[T any](
+// NewProgressComponent creates a new progress model.
+func NewProgressComponent[T any](
 	items []T,
 	execFunc func(item T) error,
 	itemLabel func(item T) string,
-) *ProgressModel[T] {
+) *ProgressComponent[T] {
 	p := progress.New(
 		progress.WithDefaultGradient(),
 		progress.WithWidth(40),
 		progress.WithoutPercentage(),
 	)
 
-	return &ProgressModel[T]{
+	return &ProgressComponent[T]{
 		items:     items,
 		progress:  p,
 		execFunc:  execFunc,
@@ -42,13 +42,13 @@ func NewProgressModel[T any](
 }
 
 // Init initializes the progress model.
-func (m *ProgressModel[T]) Init() tea.Cmd {
+func (m *ProgressComponent[T]) Init() tea.Cmd {
 	return tickCmd()
 }
 
 // Update updates the progress model.
-func (m *ProgressModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
+func (m *ProgressComponent[T]) Update(teaMsg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := teaMsg.(type) {
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
@@ -76,14 +76,18 @@ func (m *ProgressModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Batch(tickCmd(), cmd)
 	}
 
-	progressModel, cmd := m.progress.Update(msg)
-	m.progress = progressModel.(progress.Model)
+	progressModel, cmd := m.progress.Update(teaMsg)
+	model, ok := progressModel.(progress.Model)
+
+	if ok {
+		m.progress = model
+	}
 
 	return m, cmd
 }
 
 // View renders the progress model.
-func (m *ProgressModel[T]) View() string {
+func (m *ProgressComponent[T]) View() string {
 	if m.err != nil {
 		return fmt.Sprintf("Error: %v\n", m.err)
 	}
@@ -114,10 +118,12 @@ func RunProgress[T any](
 	itemLabel func(item T) string,
 ) error {
 	if len(items) == 0 {
-		return errors.New("no items to process")
+		log.Printf("[prompt-progress] no items to process")
+
+		return nil
 	}
 
-	model := NewProgressModel(items, execFunc, itemLabel)
+	model := NewProgressComponent(items, execFunc, itemLabel)
 
 	if _, err := tea.NewProgram(model).Run(); err != nil {
 		return fmt.Errorf("failed to run progress program: %w", err)

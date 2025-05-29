@@ -1,8 +1,8 @@
 package workspace
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"path/filepath"
 
 	"github.com/viqueen/git-extensions/pkg/prompt"
@@ -15,14 +15,26 @@ func (w *workspace) Clone(filter RepoFilter) error {
 	}
 
 	if len(repos) == 0 {
-		return errors.New("no repositories to clone")
+		log.Printf("[git-workspace] No repositories found matching the filter")
+
+		return nil
 	}
 
 	execClone := func(repo Repo) error {
 		repoLocation := filepath.Join(w.config.Dir, repo.Workspace, repo.Name)
-		_, cloneErr := w.execCommand.Git("clone", repo.UrlConnection, repoLocation)
 
-		return cloneErr
+		_, cloneErr := w.execCommand.Git("clone", repo.UrlConnection, repoLocation)
+		if cloneErr != nil {
+			return fmt.Errorf(
+				"failed to clone %s/%s/%s: %w",
+				repo.Workspace,
+				repo.Owner,
+				repo.Name,
+				cloneErr,
+			)
+		}
+
+		return nil
 	}
 
 	labelFunc := func(repo Repo) string {
