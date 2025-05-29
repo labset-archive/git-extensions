@@ -5,14 +5,21 @@ import (
 	"log"
 	"path/filepath"
 
+	"github.com/viqueen/git-extensions/pkg/collections"
+	"github.com/viqueen/git-extensions/pkg/registry"
+
 	"github.com/viqueen/git-extensions/pkg/prompt"
 )
 
 func (w *workspace) Clone(filter RepoFilter) error {
-	repos, err := w.List(filter)
+	items, err := w.repos.ListItems(asRegistryFilter(filter))
 	if err != nil {
 		return fmt.Errorf("failed to list repos: %w", err)
 	}
+
+	repos := collections.Map(items, func(item registry.Item[Repo]) Repo {
+		return item.Value
+	})
 
 	if len(repos) == 0 {
 		log.Printf("[git-workspace] No repositories found matching the filter")

@@ -9,7 +9,7 @@ type Workspace interface {
 	Add(repo Repo) error
 	Remove(filter RepoFilter) error
 	Clone(filter RepoFilter) error
-	List(filter RepoFilter) ([]Repo, error)
+	List(filter RepoFilter) error
 }
 
 type workspace struct {

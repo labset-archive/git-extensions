@@ -13,7 +13,7 @@ func ListCmd() *cobra.Command {
 			return withWorkspace(func(config *workspace.Config, ws workspace.Workspace) error {
 				filter := optionsToRepoFilter(cmd, config)
 
-				return workspace.List(ws, filter)
+				return ws.List(filter)
 			})
 		},
 	}
