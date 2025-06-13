@@ -20,12 +20,6 @@ Collection of git extensions to enhance any local development setup.
 make lint-fix
 ```
 
-- generate mocks
-
-```bash
-make mocks
-```
-
 - build it
 
 ```bash
